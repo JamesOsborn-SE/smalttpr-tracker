@@ -1,0 +1,14 @@
+includes.js
+ bosses         // Boss Names for Boss JS files to load
+ regionNames    // Region Names for Region JS files to load
+ dirs           // Dirname for Region JS files to load
+
+items.js
+ gameItems      // All internal item names
+
+main.js
+ defaultOptions // Cookie defaults
+ games          // Game names for display in title
+
+shared.js
+ gameItems      // Internal item names databases

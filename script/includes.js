@@ -100,6 +100,9 @@ if(gameSet == "lozmx") {
     scripts.push("script/classes/Region/SuperMetroid.js");
     scripts.push("script/zelda3/item-limits.js");
     scripts.push("script/metroid3/item-limits.js");
+} else if(gameSet == "averge1") {
+    scripts.push("script/classes/Region/AxiomVerge.js");
+    scripts.push("script/averge1/item-limits.js");
 }
 
 let universe = selectedGame.substr(0,selectedGame.length - 1);
@@ -176,6 +179,17 @@ var regionNames = {
         lowernorfair:   ["west","east"],
         tourian:        ["main"],
         hyruleportals:  ["main"],
+    },
+    averge1: {
+        "absu":     ["main"],
+        "edin":     ["main"],
+        "eKurMah":  ["main"],
+        "eribu":    ["main"],
+        "kur":      ["main"],
+        "indi":     ["main"],
+        "marUru":   ["main"],
+        "ukkinNa":  ["main"],
+        "zi":       ["main"],
     }
 };
 
@@ -230,7 +244,12 @@ for(var gameName in regionNames) {
                 var segmentName = region[segment];
                 var url = "";
 
-                if(gameName == "metroid3" || (gameName == "zelda3" && zeldaMode == "regions") || gameSet == "lozmx") {
+                if(
+                    gameName == "metroid3" ||
+                    (gameName == "zelda3" && zeldaMode == "regions") ||
+                    gameSet == "lozmx" ||
+                    gameSet == "averge1"
+                ) {
                     url += "script/classes/Region/";
 
                     let dirs = {
@@ -238,6 +257,7 @@ for(var gameName in regionNames) {
                         metroid3:   "SuperMetroid",
                         zelda1:     "TLoZ",
                         metroid1:   "Metroid",
+                        averge1:    "AxiomVerge",
                     };
 
                     url += dirs[selectedGame] + '/';

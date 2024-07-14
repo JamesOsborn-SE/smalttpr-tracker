@@ -205,6 +205,11 @@ let defaultOptions = {
     metroid1: {
         mapLogic: "casualLogic",
         mPos: "Above"
+    },
+    averge1: {
+        mapLogic: "glitchless",
+        mPos: "Above",
+        mZoom: 100
     }
 };
 for(let gameName in gameNames) {
@@ -1266,8 +1271,15 @@ function populateItemconfig() {
         let altGame = altGames[selectedGame];
         let useGame = thisGame;
 
-        if(gameItems[thisGame].indexOf(key) > -1 || gameItems[altGame].indexOf(key) > -1 || key == "blank") {
-            if (key.indexOf("boss") < 0 && gameItems[altGame].indexOf(key) > -1) {
+        if(
+            (gameItems[thisGame] && gameItems[thisGame].indexOf(key) > -1) ||
+            (gameItems[altGame] && gameItems[altGame].indexOf(key) > -1) ||
+            (key == "blank")
+        ) {
+            if (
+                (key.indexOf("boss") < 0) &&
+                (gameItems[altGame] && gameItems[altGame].indexOf(key) > -1)
+            ) {
                 useGame = altGame;
             }
             if (i % 10 === 0){
@@ -1289,7 +1301,8 @@ function populateItemconfig() {
                 key.indexOf('heart') === 2 ||
                 key.indexOf('missile') > -1 ||
                 key.indexOf('powerbomb') > -1 ||
-                key.indexOf('tank') > -1
+                key.indexOf('tank') > -1 ||
+                key.indexOf('-node') > -1
             ) {
                 rowitem.style.backgroundImage = "url(" + build_img_url(key,useGame) + ")";
             }
@@ -1348,6 +1361,7 @@ function initTracker() {
         zelda3:     "ALttP",
         metroid1:   "Metroid",
         metroid3:   "Super Metroid",
+        averge1:    "Axiom Verge",
     };
     var game = games[selectedGame];
     document.title = game + " Item Tracker";
@@ -1482,8 +1496,9 @@ Vue.component('tracker-cell', {
         this.itemName.indexOf('heart') === 2 ||
         this.itemName.indexOf('missile') > -1 ||
         this.itemName.indexOf('powerbomb') > -1 ||
-        this.itemName.indexOf('tank') > -1
-      ) {
+        this.itemName.indexOf('tank') > -1 ||
+        this.itemName.indexOf('-node') > -1
+        ) {
         if(
             this.itemName.indexOf('missile') > -1 ||
             this.itemName.indexOf('powerbomb') > -1
@@ -1544,7 +1559,10 @@ Vue.component('tracker-cell', {
       let universe = selectedGame.substr(0,selectedGame.length - 1);
       let itemGame = selectedGame;
 
-      if((gameItems[universe + "1"].indexOf(this.itemName) == -1) && (gameItems[universe + "3"].indexOf(this.itemName) == -1)) {
+      if(
+        (gameItems[universe + "1"] && gameItems[universe + "1"].indexOf(this.itemName) == -1) &&
+        (gameItems[universe + "3"] && gameItems[universe + "3"].indexOf(this.itemName) == -1)
+      ) {
         itemGame = altGames[selectedGame];
       }
 

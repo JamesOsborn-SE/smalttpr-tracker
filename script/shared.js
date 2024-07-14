@@ -32,11 +32,13 @@ var prefixes = {
     "zelda3":   "z3",
     "metroid3": "m3",
     "zelda1":   "z1",
-    "metroid1": "m1"
+    "metroid1": "m1",
+    "averge1":  "a1"
 };
 var gameSets = {
     "smalttpr": ["zelda3","metroid3"],
-    "lozmx":    ["zelda1","metroid1"]
+    "lozmx":    ["zelda1","metroid1"],
+    "averge1":  ["averge1"]
 };
 
 var altGames = {};
@@ -170,6 +172,7 @@ function build_img_url(item,useGame = selectedGame) {
     var zelda1items = gameItems.zelda1;
     var metroid3items = gameItems.metroid3;
     var metroid1items = gameItems.metroid1;
+    var averge1items = gameItems.averge1;
     let filext = "png";
 
     let itemKey = item;
@@ -189,6 +192,8 @@ function build_img_url(item,useGame = selectedGame) {
             useGame = "zelda1";
         } else if(zelda3items.indexOf(itemKey) > -1 || zelda3items.indexOf(itemKey.substr(0,itemKey.length-1)) > -1) {
             useGame = "zelda3";
+        } else if(averge1items.indexOf(itemKey) > -1 || averge1items.indexOf(itemKey.substr(0,itemKey.length-1)) > -1) {
+            useGame = "averge1";
         }
     }
     if(selectedGame == "zelda1" && item.indexOf("boss5") > -1) {

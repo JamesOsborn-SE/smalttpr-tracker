@@ -152,14 +152,7 @@ gameItems.metroid1 = [
 for([gameID,items] of Object.entries(gameItems)) {
     for(let idx in items) {
         let item = items[idx];
-        let prefixes = {
-            "zelda3":   "z3",
-            "zelda1":   "z1",
-            "metroid3": "m3",
-            "metroid1": "m1"
-        };
-        let prefix = prefixes[gameID];
-
+        let prefix = prefixes[gameID] ? prefixes[gameID] : "";
         gameItems[gameID][idx] = prefix + item;
     }
 }

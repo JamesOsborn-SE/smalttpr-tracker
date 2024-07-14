@@ -28,6 +28,12 @@ function extend(obj, src) {
 
 var selectedGame = getParameterByName("game",window.location,"zelda3");
 var effectiveVersion = "";
+var prefixes = {
+    "zelda3":   "z3",
+    "metroid3": "m3",
+    "zelda1":   "z1",
+    "metroid1": "m1"
+};
 var gameSets = {
     "smalttpr": ["zelda3","metroid3"],
     "lozmx":    ["zelda1","metroid1"]

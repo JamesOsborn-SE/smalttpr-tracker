@@ -14,13 +14,17 @@ class LowerNorfairWest extends LowerNorfair {
     this.locations["Missile (Gold Torizo)"].casualLogic = function() {
         return canUsePowerBombs() && has("space") && canOpenGreenDoors();
     }
-    this.locations["Super Missile (Gold Torizo)"].casualLogic =
+    this.locations["Super Missile (Gold Torizo)"].casualLogic = function() {
+        // Missile (Gold Torizo)
+        return canUsePowerBombs() && has("space") && canOpenGreenDoors();
+    }
     this.locations["Screw Attack"].casualLogic = function() {
         return canDestroyBombWalls()
             && (canAccessLowerNorfairPortal() || (has("space") && canUsePowerBombs()));
     }
     this.locations["Gold Torizo"].casualLogic = function() {
-        return this.locations["Missile (Gold Torizo)"].casualLogic();
+        // Missile (Gold Torizo)
+        return canUsePowerBombs() && has("space") && canOpenGreenDoors();
     }
 
     this.canEnter.casualLogic = function() {
@@ -60,7 +64,13 @@ class LowerNorfairWest extends LowerNorfair {
     }
 
     this.locations["Gold Torizo"].tourneyLogic = function() {
-        return this.locations["Missile (Gold Torizo)"].tourneyLogic();
+        // Missile (Gold Torizo)
+        return canUsePowerBombs()
+            && has("space")
+            && heatProof()
+            && (canHiJump() || canSwimSM()
+                || (canAccessLowerNorfairPortal() &&
+                    (canFlySM() || canSpringBallJump() || canDashSM())));
     }
     this.canEnter.tourneyLogic = function() {
         let ne = new NorfairEast("","",false);

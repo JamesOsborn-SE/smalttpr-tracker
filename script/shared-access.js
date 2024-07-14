@@ -74,6 +74,9 @@ Object.defineProperty(Availability.prototype, 'majorGlitches', {
 
 function getHas(item) {
     var val = 0;
+    if(prefixes[selectedGame]) {
+        item = prefixes[selectedGame] + item;
+    }
     if(trackerData[selectedGame] && trackerData[selectedGame].items && trackerData[selectedGame].items[item]) {
         val = trackerData[selectedGame].items[item];
     } else if(trackerData.zelda3 && trackerData.zelda3.items && trackerData.zelda3.items[item]) {
@@ -97,6 +100,9 @@ function has(item, amount = -1) {
     }
 
     if(item.indexOf('.') == -1) {
+        if(prefixes[selectedGame]) {
+            item = prefixes[selectedGame] + item;
+        }
         if(trackerData[selectedGame] && trackerData[selectedGame].items && trackerData[selectedGame].items[item]) {
             ret = true;
             val = trackerData[selectedGame].items[item];

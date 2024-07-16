@@ -108,22 +108,28 @@ if(gameSet == "lozmx") {
 let universe = selectedGame.substr(0,selectedGame.length - 1);
 sheets.push("css/" + universe + '/' + universe.substr(0,1) + selectedGame.substr(-1) + '/' + universe + selectedGame.substr(-1) + ".css");
 
-if(selectedGame != "zelda3") {
-    sheets.push("css/zelda/notzelda3.css");
+for(let u of ["zelda","metroid"]) {
+    if(universe != u) {
+        sheets.push(`css/${u}/not${u}.css`);
+    }
 }
-if(selectedGame != "metroid3") {
-    sheets.push("css/metroid/notmetroid3.css");
+for(let g of ["lozmx","smalttpr"]) {
+    if(gameSet != g) {
+        sheets.push(`css/gamesets/not${g}.css`)
+    }
 }
-if(selectedGame != "metroid1") {
-    sheets.push("css/metroid/notmetroid1.css");
+for(let g of ["zelda1","metroid1","zelda3","metroid3"]) {
+    if(selectedGame != g) {
+        let u = g.substr(0,g.length - 1);
+        sheets.push(`css/${u}/not${g}.css`)
+    }
 }
+
 if(universe == "zelda") {
     sheets.push("css/zelda/zelda.css");
 }
 if(universe == "metroid") {
     sheets.push("css/metroid/metroid.css");
-} else {
-    sheets.push("css/metroid/notmetroid.css");
 }
 
 sheets.push("css/portals.css");

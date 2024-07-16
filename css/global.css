@@ -26,7 +26,7 @@ a {
     overflow-y: auto;
 }
 
-.zelda1 .hidden {
+.hidden {
     visibility: hidden;
 }
 
@@ -81,7 +81,7 @@ input {
     margin-top: 5px;
     margin-bottom: 5px;
     display:inline-block;
-    *display: inline;     /* for IE7*/
+    display: inline;     /* for IE7*/
     zoom:1;              /* for IE7*/
     vertical-align:middle;
 }

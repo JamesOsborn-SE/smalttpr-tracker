@@ -230,7 +230,7 @@ function loadCookie() {
     if (cookielock)
         return;
     cookielock = true;
-    cookieobj = getConfigObjectFromCookie();
+    cookieobj = getConfigObjectFromCookie(true);
     setConfigObject(cookieobj);
     cookielock = false;
 }
@@ -301,18 +301,36 @@ function updateConfigFromFirebase(configobj) {
 function saveConfigToFirebase() {
 }
 
-function saveCookie() {
+function saveCookie(onInit = false) {
     if (cookielock)
         return;
     cookielock = true;
 
-    cookieobj = getConfigObject();
-    setCookie(cookieobj);
+    if(onInit) {
+        cookieobj = getConfigObjectFromCookie(onInit);
+    } else {
+        cookieobj = getConfigObject();
+        setCookie(cookieobj);
+    }
 
     cookielock = false;
 }
 
-function getConfigObjectFromCookie() {
+function resetCookie() {
+    if(cookielock) {
+        return;
+    }
+    cookielock = true;
+    try {
+        window.localStorage.removeItem(gameSet);
+        window.location.reload();
+    } catch(e) {
+        // do nothing
+    }
+    cookielock = false;
+}
+
+function getConfigObjectFromCookie(getAllKeys = true) {
     configobj = getCookie();
     var globalKeys = ["ts","itemValues"];
 
@@ -324,12 +342,23 @@ function getConfigObjectFromCookie() {
                     if(cookieDefault[gameName][key] !== undefined) {
                         configobj[gameName][key] = cookieDefault[gameName][key];
                     }
-                } else {
+                } else if (!getAllKeys) {
                     configobj[key] = cookieDefault[key];
                 }
             }
         }
     });
+
+    if(getAllKeys) {
+        // Add any more fields you need to populate from local storage here.
+        extend(trackerData[selectedGame].items, configobj.itemValues);
+        extend(trackerData[selectedGame].chestsimportant, configobj[selectedGame].chestsimportant);
+        extend(trackerData[selectedGame].chestsopened, configobj[selectedGame].chestsopened);
+        extend(trackerData[selectedGame].chestsportal, configobj[selectedGame].chestsportal);
+        extend(trackerData[selectedGame].dungeonchests, configobj[selectedGame].dungeonchests);
+        extend(trackerData[selectedGame].dungeonbeaten, configobj[selectedGame].dungeonbeaten);
+        extend(trackerData[selectedGame].dungeonchests, configobj[selectedGame].dungeonchests);
+    }
 
     return configobj;
 }
@@ -1061,6 +1090,9 @@ function refreshMapMedallion(d) {
 
 function refreshChests() {
     for(k=0; k<chests[selectedGame].length; k++){
+        if(chests[selectedGame][k].isOpened != trackerData[selectedGame].chestsopened[k]) {
+            chests[selectedGame][k].isOpened = trackerData[selectedGame].chestsopened[k];
+        }
         let chest = chests[selectedGame][k];
         let chestDOM = document.getElementById(k);
         chestDOM.className = chestClass(k);
@@ -1224,7 +1256,9 @@ function populateMapdiv(useGame = "zelda3") {
         if(chests[useGame][k].x == "" && chests[useGame][k].y == "") {
             s.style.display = "none";
         }
-        mapdiv.appendChild(s);
+        if(mapdiv) {
+            mapdiv.appendChild(s);
+        }
     }
 
     // Dungeon bosses & chests
@@ -1241,7 +1275,9 @@ function populateMapdiv(useGame = "zelda3") {
         if(dungeons[useGame][k].x == "" && dungeons[useGame][k].y == "") {
             s.style.display = "none";
         }
-        mapdiv.appendChild(s);
+        if(mapdiv) {
+            mapdiv.appendChild(s);
+        }
 
         s = document.createElement('span');
         s.style.backgroundImage = 'url(' + build_img_url("poi") + ')';
@@ -1255,7 +1291,9 @@ function populateMapdiv(useGame = "zelda3") {
         if(dungeons[useGame][k].x == "" && dungeons[useGame][k].y == "") {
             s.style.display = "none";
         }
-        mapdiv.appendChild(s);
+        if(mapdiv) {
+            mapdiv.appendChild(s);
+        }
     }
 }
 
@@ -1348,7 +1386,7 @@ function useTourneyConfig() {
 
 function initTracker() {
     var useGame = arguments[0];
-    document.body.classList.add(roomid);
+    document.body.classList.add(gameSet);
     document.body.classList.add(selectedGame);
     populateMapdiv(useGame);
     populateItemconfig();

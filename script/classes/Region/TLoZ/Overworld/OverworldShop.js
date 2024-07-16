@@ -59,6 +59,11 @@ class OverworldShop extends Overworld {
       this.locations["Unnamed Shop 4"].glitchless = function() {
           return canLightBushes();
       }
+      if(this.locations["ALttP Portal: Kakariko Fortune Teller"]) {
+        this.locations["ALttP Portal: Kakariko Fortune Teller"].glitchless = function() {
+            return "portal portal-zelda3 active";
+        }
+      }
 
       if(questid == 1) {
           this.locations["Unnamed Shop 5"].glitchless = function() {

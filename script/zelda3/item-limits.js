@@ -18,6 +18,10 @@ var iMin = {
     z3boss2: 1,
 
     z3agahnim:0,
+    ganonz1: 0,
+    ganonz3: 0,
+    mbm1: 0,
+    mbm3: 0,
 
     z3boss3: 1,
     z3boss4: 1,
@@ -52,6 +56,10 @@ var iMax = {
     z3boss2: 2,
 
     z3agahnim: 2,
+    ganonz1: 1,
+    ganonz3: 1,
+    mbm1: 1,
+    mbm3: 1,
 
     z3boss3: 2,
     z3boss4: 2,

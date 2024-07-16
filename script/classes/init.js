@@ -188,10 +188,15 @@ function initClasses(useGame) {
                                         var tmp = "";
 
                                         if(regionObjects[this.region].canEnter.glitchless() && this.canAccess.glitchless()) {
-                                            availability.glitchless = tmp + " active";
-                                            availability.minorGlitches = tmp + " active";
-                                            availability.owGlitches = tmp + " active";
-                                            availability.majorGlitches = tmp + " active";
+                                            if(typeof this.canAccess.glitchless() == "string") {
+                                                tmp = this.canAccess.glitchless();
+                                            } else {
+                                                tmp = "active";
+                                            }
+                                            availability.glitchless = tmp;
+                                            availability.minorGlitches = tmp;
+                                            availability.owGlitches = tmp;
+                                            availability.majorGlitches = tmp;
                                         } else {
                                             availability.glitchless = tmp + " inactive";
                                             availability.minorGlitches = tmp + " inactive";
@@ -203,8 +208,13 @@ function initClasses(useGame) {
                                         var tmp = "";
 
                                         if(regionObjects[this.region].canEnter.casualLogic() && this.canAccess.casualLogic()) {
-                                            availability.casualLogic = tmp + " active";
-                                            availability.tourneyLogic = tmp + " active";
+                                            if(typeof this.canAccess.casualLogic() == "string") {
+                                                tmp = this.canAccess.casualLogic();
+                                            } else {
+                                                tmp = "active";
+                                            }
+                                            availability.casualLogic = tmp;
+                                            availability.tourneyLogic = tmp;
                                         } else {
                                             availability.casualLogic = tmp + " inactive";
                                             availability.tourneyLogic = tmp + " inactive";

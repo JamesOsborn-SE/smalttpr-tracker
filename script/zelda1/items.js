@@ -1,4 +1,5 @@
-defaultItemGrid.zelda1 = [
+let g = "zelda1";
+defaultItemGrid[g] = [
     // Z1
     [
         "z1boomerang",
@@ -42,7 +43,10 @@ defaultItemGrid.zelda1 = [
     ]
 ];
 
-dungeonchestsInit.zelda1 = [1,1,1,1,1,1,1,1,1,1];
-dungeonbeatenInit.zelda1 = [false,false,false,false,false,false,false,false,false,false];
-prizesInit.zelda1 = [];
-medallionsInit.zelda1 = [];
+dungeonchestsInit[g] = {};
+
+// 8 bosses in Z1
+let z1 = 8;
+dungeonbeatenInit[g] = Array(z1).fill(false);
+prizesInit[g] = Array(z1).fill(0);
+medallionsInit[g] = Array(z1).fill(0);

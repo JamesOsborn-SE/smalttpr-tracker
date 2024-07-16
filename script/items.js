@@ -203,6 +203,9 @@ for([gameID,items] of Object.entries(gameItems)) {
         gameItems[gameID][idx] = prefix + item;
     }
 }
+for(let newItem of ["ganonz3","mbm3","ganonz1","mbm1"]) {
+    gameItems.zelda3.push(newItem);
+}
 
 var itemsInit = {
     blank: false,
@@ -246,6 +249,10 @@ var itemsInit = {
     z3heartpiece: 0,
 
     z3agahnim: 0,
+    ganonz1: 0,
+    ganonz3: 0,
+    mbm1: 0,
+    mbm3: 0,
 
     // Z1-specific
     z1bow: false,

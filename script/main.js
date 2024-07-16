@@ -435,7 +435,7 @@ for(let crumb in crumbs) {
     let url = crumbs[crumb];
 
     selectGame += '<a href="' + url + '">' + title + '</a>';
-    if(roomid == "smalttpr" && title == "Hyrule") {
+    if(gameSet == "smalttpr" && title == "Hyrule") {
         selectGame += '<a href="?game=zelda3&zeldaMode=regions">*</a>';
     }
 
@@ -817,7 +817,7 @@ function showWarps(sender) {
 
 function showPortals(sender) {
     trackerData[selectedGame].showPortals = sender.checked;
-    let portals = document.querySelectorAll(".portal-" + altGames[selectedGame]);
+    let portals = document.querySelectorAll(".portal");
     if(sender.checked) {
         portals.forEach(function(userItem) {
             userItem.classList.remove("hidden");
@@ -1139,6 +1139,9 @@ function refreshMap() {
           document.getElementById("bossMap"+k).className = "mapspan boss " + dungeons[selectedGame][k].isBeatable().getClassName();
       }
 
+      if(!dungeons[selectedGame]) { console.log(`Dungeons not found for '${selectedGame}'!`); }
+      if(!dungeons[selectedGame][k]) { console.log(`Dungeon Chests not found for '${selectedGame}[${k}]'!`); }
+      if(!trackerData[selectedGame].dungeonchests) { console.log(`Saved Dungeon Chests not found for '${selectedGame}[${k}]'!`); return; }
       if(trackerData[selectedGame].dungeonchests[k]) {
           document.getElementById("dungeon"+k).className = "mapspan dungeon " + dungeons[selectedGame][k].canGetChest().getClassName();
       } else {
@@ -1322,7 +1325,9 @@ function populateItemconfig() {
             }
             if (i % 10 === 0){
                 row = document.createElement('tr');
-                grid.appendChild(row);
+                if(grid) {
+                    grid.appendChild(row);
+                }
             }
             i++;
 
@@ -1516,6 +1521,15 @@ Vue.component('tracker-cell', {
   ],
   computed: {
     bossNum: function() {
+      mBosses = {
+        "13": "kraid",
+        "14": "phantoon",
+        "15": "draygon",
+        "16": "ridley"
+      };
+      if(Object.values(mBosses).indexOf(this.itemName) > -1) {
+        return Object.keys(mBosses)[Object.values(mBosses).indexOf(itemName)];
+      }
       if(this.itemName.indexOf("boss") === -1) { return null; }
       return this.itemName.substring(6);
     },
@@ -1578,7 +1592,10 @@ Vue.component('tracker-cell', {
     prizeImage: function() {
       if(universe != "zelda") { return null; }
       if(selectedGame == "zelda3") {
-        if(this.bossNum && this.bossNum !== "10" && this.trackerData[selectedGame] && this.trackerData[selectedGame].showPrizes) {
+        if([null,"10","11","12"].indexOf(this.bossNum) > -1) {
+            return null;
+        }
+        if(this.bossNum && this.trackerData[selectedGame] && this.trackerData[selectedGame].showPrizes) {
           return "url(" + build_img_url("dungeon" + this.trackerData[selectedGame].prizes[this.bossNum]) + ")";
         }
       } else if(this.bossNum && selectedGame == "zelda1") {
@@ -1693,7 +1710,8 @@ Vue.component('tracker-cell', {
       this.clickChest(-1);
     },
     clickPrize: function(amt) {
-      var newPrize = (this.trackerData[selectedGame].prizes[this.bossNum] + amt + 4) % 4;
+      let newNum = 7;
+      var newPrize = (this.trackerData[selectedGame].prizes[this.bossNum] + amt + newNum) % newNum;
       // need to use splice here instead of just setting it the normal way or vue won't pick up the change
       this.trackerData[selectedGame].prizes.splice(this.bossNum, 1, newPrize);
       updateAll();

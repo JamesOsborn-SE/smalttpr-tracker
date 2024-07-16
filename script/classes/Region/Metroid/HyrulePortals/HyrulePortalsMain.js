@@ -9,7 +9,7 @@ class HyrulePortalsMain extends HyrulePortals {
         new Location("Portal","TLoZ Portal: Norfair Exit",558,162,"NorfairMain"),    // 0x1E10, Due east of Upper Right Area Top Floor, exit Right
         new Location("Portal","TLoZ Portal: Ridley Exit",558,486,"RidleyMain"),      // 0x1E1C, Due east of Ridley, exit Right
         new Location("Portal","TLoZ Portal: Tourian Exit",18,18,"TourianMain"),      // Tourian exit elevator
-        new Location("Portal","ALttP Portal: Lumberjack House",108,234,"BrinstarMain"),// Tourian exit elevator
+        // new Location("Portal","ALttP Portal: Lumberjack House",108,234,"BrinstarMain"),
     ],this);
   }
 

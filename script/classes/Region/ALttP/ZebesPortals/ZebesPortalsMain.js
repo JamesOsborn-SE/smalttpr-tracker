@@ -44,13 +44,21 @@ class ZebesPortalsMain extends ZebesPortals {
             let lwnw = new LightWorldNorthWest("","",false);
             lwnw.initNoMajorGlitches();
 
-            return (lwnw.canEnter.glitchless() && canAccessCrateriaPortal()) || canAccessLightWorldPortal();
+            if((lwnw.canEnter.glitchless() && canAccessCrateriaPortal()) || canAccessLightWorldPortal()) {
+                return "portal portal-zelda1 active";
+            }
+
+            return false;
         }
         this.locations["M1 Portal: E of Start"].glitchless = function() {
             let lwnw = new LightWorldNorthWest("","",false);
             lwnw.initNoMajorGlitches();
 
-            return (lwnw.canEnter.glitchless() && canAccessCrateriaPortal()) || canAccessLightWorldPortal();
+            if((lwnw.canEnter.glitchless() && canAccessCrateriaPortal()) || canAccessLightWorldPortal()) {
+                return "portal portal-metroid1 active";
+            }
+
+            return false;
         }
     }
 

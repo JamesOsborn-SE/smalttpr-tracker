@@ -1,4 +1,5 @@
-defaultItemGrid.metroid3 = [
+let g = "metroid3";
+defaultItemGrid[g] = [
     [
         "m3missile",
         "m3supermissile",
@@ -46,7 +47,10 @@ defaultItemGrid.metroid3 = [
     ],
 ];
 
-dungeonchestsInit.metroid3 = {};
-dungeonbeatenInit.metroid3 = [false,false,false,false,false,false,false,false,false,false];
-prizesInit.metroid3 = [];
-medallionsInit.metroid3 = [];
+dungeonchestsInit[g] = {};
+
+// 5 minibosses (BT, SpoSpo, Croc, Botwoon, GT), 4 G4, 1 Mother Brain
+let m3 = 5 + 4 + 1;
+dungeonbeatenInit[g] = Array(m3).fill(false);
+prizesInit[g] = Array(m3).fill(0);
+medallionsInit[g] = Array(m3).fill(0);

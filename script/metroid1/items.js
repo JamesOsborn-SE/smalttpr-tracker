@@ -1,4 +1,5 @@
-defaultItemGrid.metroid1 = [
+let g = "metroid1";
+defaultItemGrid[g] = [
     [
         "m1morph",
         "m1bombs",
@@ -23,7 +24,10 @@ defaultItemGrid.metroid1 = [
     ],
 ];
 
-dungeonchestsInit.metroid1 = {};
-dungeonbeatenInit.metroid1 = [false,false,false];
-prizesInit.metroid1 = [];
-medallionsInit.metroid1 = [];
+dungeonchestsInit[g] = {};
+
+// 3 bosses in M1
+let m1 = 3;
+dungeonbeatenInit[g] = Array(m1).fill(false);
+prizesInit[g] = Array(m1).fill(0);
+medallionsInit[g] = Array(m1).fill(0);

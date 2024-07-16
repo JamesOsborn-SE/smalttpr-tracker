@@ -1,4 +1,5 @@
-defaultItemGrid.zelda3 = [
+let g = "zelda3";
+defaultItemGrid[g] = [
     // Z3
     [
         "z3tunic",
@@ -75,16 +76,20 @@ defaultItemGrid.zelda3 = [
     ],
     // Z1
     [
+        "m3kraid",
         "z1bow",
         "z1silvers",
         "z1recorder",
         "z1magicalrod",
+        "m3phantoon",
     ],
     [
+        "m3draygon",
         "z1sword",
         "z1raft",
         "z1ladder",
         "z1bracelet",
+        "m3ridley",
     ],
     // M1
     [
@@ -94,9 +99,20 @@ defaultItemGrid.zelda3 = [
         "m1missile",
         "m1hijump",
     ],
+    [
+        "m1kraidtotem",
+        "blank",
+        "m1ridleytotem",
+    ],
+    [
+        "ganonz3",
+        "mbm3",
+        "ganonz1",
+        "mbm1",
+    ]
 ];
 
-dungeonchestsInit.zelda3 = {
+dungeonchestsInit[g] = {
     0: 3,
     1: 2,
     2: 2,
@@ -112,6 +128,9 @@ dungeonchestsInit.zelda3 = {
     12: 0
 };
 
-dungeonbeatenInit.zelda3 = [false, false, false, false, false, false, false, false, false, false, false, false, false];
-prizesInit.zelda3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-medallionsInit.zelda3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// 13 bosses in Z3 + 4 bosses in SM
+let z3 = 13;
+let m3 = 4;
+dungeonbeatenInit[g] = Array(z3 + m3).fill(false);
+prizesInit[g] = Array(z3 + m3).fill(0);
+medallionsInit[g] = Array(z3 + m3).fill(0);

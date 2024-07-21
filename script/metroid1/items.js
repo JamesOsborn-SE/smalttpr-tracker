@@ -1,4 +1,4 @@
-let g = "metroid1";
+g = "metroid1";
 defaultItemGrid[g] = [
     [
         "m1morph",

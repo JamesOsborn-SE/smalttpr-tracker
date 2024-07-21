@@ -1,4 +1,4 @@
-let g = "metroid3";
+g = "metroid3";
 defaultItemGrid[g] = [
     [
         "m3missile",

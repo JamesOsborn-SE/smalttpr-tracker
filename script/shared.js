@@ -26,6 +26,10 @@ function extend(obj, src) {
     return obj;
 }
 
+var manifests = [];
+var g = "";
+var bosses = 0;
+
 var selectedGame = getParameterByName("game",window.location,"zelda3");
 var effectiveVersion = "";
 var prefixes = {

@@ -81,22 +81,22 @@ for(let key in defaultBoth) {
     }
 }
 
-var bosses = 0;
+var bossNums = 0;
 var gameAbbr = "";
 if(selectedGame == "zelda3") {
     gameAbbr = "z3";
-    bosses = 11;
+    bossNums = 11;
 } else if(selectedGame == "metroid3") {
     gameAbbr = "m3";
-    bosses = 10;
+    bossNums = 10;
 } else if(selectedGame == "zelda1") {
     gameAbbr = "z1";
-    bosses = 10;
+    bossNums = 10;
 } else if(selectedGame == "metroid1") {
     gameAbbr = "m1";
-    bosses = 3;
+    bossNums = 3;
 }
-for(var i = 0; i < bosses; i++) {
+for(var i = 0; i < bossNums; i++) {
     trackerData[selectedGame].items[gameAbbr + "boss" + i] = 1;
 }
 

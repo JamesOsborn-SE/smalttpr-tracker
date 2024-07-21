@@ -1,4 +1,4 @@
-let g = "zelda1";
+g = "zelda1";
 defaultItemGrid[g] = [
     // Z1
     [

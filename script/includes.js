@@ -41,6 +41,8 @@ function fix_region(str) {
 }
 
 var scripts = [
+    "script/manifest.js",
+    "script/" + selectedGame + "/manifest.js",
     "script/items.js",
     "script/shared-access.js",
     "script/" + selectedGame + "/items.js",
@@ -51,7 +53,7 @@ var sheets = [
 
 scripts.push("script/classes/Boss.js");
 
-var bosses = {
+var bossDefns = {
     zelda3: [
         "ArmosKnights",
         "Lanmolas",
@@ -76,8 +78,8 @@ var bosses = {
     ],
 };
 
-for(var gameName in bosses) {
-    list = bosses[gameName];
+for(var gameName in bossDefns) {
+    list = bossDefns[gameName];
     for(var boss in list) {
         boss = list[boss];
         scripts.push("script/classes/Boss/Boss" + boss + ".js");
@@ -281,6 +283,8 @@ for(var gameName in regionNames) {
 
 scripts.push("script/vue/vue-2.5.16-min.js");
 scripts.push("script/main.js");
+
+console.log({sheets:sheets,scripts:scripts});
 
 LazyLoad.css(sheets, function () {
 });

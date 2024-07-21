@@ -4,12 +4,12 @@ class TLoZ extends Region {
 }
 class Overworld extends TLoZ {
 }
-class ZebesPortals extends TLoZ {
+class Z1ZebesPortals extends TLoZ {
 }
-class Dungeons extends TLoZ {
+class Z1Dungeons extends TLoZ {
     constructor(name,subname) {
         super(name,subname);
-        Dungeons.prototype.boss = new Boss();
+        Z1Dungeons.prototype.boss = new Boss();
         this.canGetChest = {
             glitchless: function() { return true; },
             minorGlitches: function() { return this.glitchless(); },

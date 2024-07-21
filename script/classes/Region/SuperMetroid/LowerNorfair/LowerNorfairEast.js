@@ -35,7 +35,7 @@ class LowerNorfairEast extends LowerNorfair {
     }
 
     this.canEnter.casualLogic = function() {
-        let ne = new NorfairEast("","",false);
+        let ne = new M3NorfairEast("","",false);
         ne.initCasual();
 
         return heatProof()
@@ -58,7 +58,7 @@ class LowerNorfairEast extends LowerNorfair {
     this.initCasual();
 
     this.canEnter.tourneyLogic = function() {
-        let ne = new NorfairEast("","",false);
+        let ne = new M3NorfairEast("","",false);
         ne.initTournament();
 
         return heatProof()

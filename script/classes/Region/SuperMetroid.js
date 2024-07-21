@@ -2,19 +2,19 @@ effectiveVersion = "v10.0";
 
 class SuperMetroid extends Region {
 }
-class Brinstar extends SuperMetroid {
+class M3Brinstar extends SuperMetroid {
 }
 class Crateria extends SuperMetroid {
 }
 class Maridia extends SuperMetroid {
 }
-class Norfair extends SuperMetroid {
+class M3Norfair extends SuperMetroid {
 }
 class LowerNorfair extends SuperMetroid {
 }
 class WreckedShip extends SuperMetroid {
 }
-class Tourian extends SuperMetroid {
+class M3Tourian extends SuperMetroid {
 }
-class HyrulePortals extends SuperMetroid {
+class M3HyrulePortals extends SuperMetroid {
 }

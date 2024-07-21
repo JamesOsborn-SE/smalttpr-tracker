@@ -7,7 +7,7 @@ manifests[g] = {
     title: {
         full:   "Metroid",
         short:  "M1",
-        crumb:  "Zebes"
+        crumb:  "Proto Zebes"
     },
     prefix: "m1",
     altGame: [ "zelda1" ],
@@ -55,12 +55,12 @@ manifests[g] = {
         m1boss2:        { name: "Mother Brain",         min: 1, max:  2 }
     },
     regions: {
-        brinstar:       ["main"],
-        kraid:          ["main"],
-        norfair:        ["main"],
-        ridley:         ["main"],
-        tourian:        ["main"],
-        hyruleportals:  ["main"]
+        m1brinstar:         ["main"],
+        kraid:              ["main"],
+        m1norfair:          ["main"],
+        ridley:             ["main"],
+        m1tourian:          ["main"],
+        m1hyruleportals:    ["main"]
     },
     defaultSettings: {
         mapLogic:   "casualLogic",

@@ -1,9 +1,30 @@
+var cookieDefault = {};
 var chestsopenedInit = {};
 var chestsimportantInit = {};
 var chestsportalInit = {};
-chestsopenedInit[selectedGame] = [];
-chestsimportantInit[selectedGame] = [];
-chestsportalInit[selectedGame] = [];
+var selectedGameSet = "";
+var trackerData = {};
+
+for(let [setID, gameSet] of Object.entries(megaManifest["gameSets"])) {
+    if(gameSet["games"].indexOf(selectedGame) > -1) {
+        selectedGameSet = setID;
+    }
+    for(let gameID of gameSet["games"]) {
+        chests[gameID]              = [];
+        dungeons[gameID]            = [];
+        cookieDefault[gameID]       = {};
+        chestsopenedInit[gameID]    = [];
+        chestsimportantInit[gameID] = [];
+        chestsportalInit[gameID]    = [];
+        trackerData[gameID]         = {};
+    }
+}
+var gameSet = selectedGameSet;
+var roomid = getParameterByName("roomid",window.location,null);
+if(roomid === null) {
+    roomid = selectedGameSet;
+}
+
 for(var i = 0; i < chests[selectedGame].length; i++) {
     chestsopenedInit[selectedGame].push(false);
     chestsimportantInit[selectedGame].push(false);
@@ -34,11 +55,6 @@ for(var i = 0; i < dungeons[selectedGame].length; i++) {
     dungeons[selectedGame][i].titleStripped = title.trim();
 }
 
-var trackerData = {};
-for(let gameName in gameNames) {
-    gameName = gameNames[gameName];
-    trackerData[gameName] = {};
-}
 let defaultData = {
     items: itemsInit,
     chestsimportant: chestsimportantInit[selectedGame],
@@ -60,18 +76,17 @@ for(let key in defaultData) {
 }
 
 let defaultBoth = {
-    gotprizes: [0,0,0,0],
-    iZoom: 100,
-    map: 1,
-    mOrien: 1,
+    gotprizes:  [0,0,0,0],
+    iZoom:      100,
+    map:        "Below",
+    mOrien:     "Vertical",
     showLabels: true,
-    editMode: false,
-    selected: {}
+    editMode:   false,
+    selected:   {}
 };
 for(let key in defaultBoth) {
     let val = defaultBoth[key];
-    for(let gameName in gameNames) {
-        gameName = gameNames[gameName];
+    for(let gameName of megaManifest["gameSets"][gameSet]["games"]) {
         if(cookieDefault[gameName][key] === undefined) {
             cookieDefault[gameName][key] = val;
         }
@@ -81,21 +96,8 @@ for(let key in defaultBoth) {
     }
 }
 
-var bossNums = 0;
-var gameAbbr = "";
-if(selectedGame == "zelda3") {
-    gameAbbr = "z3";
-    bossNums = 11;
-} else if(selectedGame == "metroid3") {
-    gameAbbr = "m3";
-    bossNums = 10;
-} else if(selectedGame == "zelda1") {
-    gameAbbr = "z1";
-    bossNums = 10;
-} else if(selectedGame == "metroid1") {
-    gameAbbr = "m1";
-    bossNums = 3;
-}
+var bossNums = manifests[gameID]["dungeonchestsInit"].length;
+var gameAbbr = manifests[gameID]["title"]["short"].toLowerCase();
 for(var i = 0; i < bossNums; i++) {
     trackerData[selectedGame].items[gameAbbr + "boss" + i] = 1;
 }
@@ -144,8 +146,7 @@ function getCookie() {
     }
     if(!str) {
         var ret = {};
-        for(var gameName in gameNames) {
-            gameName = gameNames[gameName];
+        for(let gameName of megaManifest["gameSets"][gameSet]["games"]) {
             ret[gameName] = {};
         }
         return ret;
@@ -182,38 +183,19 @@ var cookiekeys = [
 
 let defaultOptions = {
     zelda3: {
-        mapLogic: (zeldaMode == "regions") ? "minorGlitches" : "glitchless",
-          mapState: "open",
-        mapOHKO: false,
-          mapSwords: true,
-        mPos: "Side",
-        mZoom: 80,
-          showChests: true,
-          showPrizes: true,
-          showMedals: true,
-    },
-    zelda1: {
-        mapLogic: "minorGlitches",
-        mPos: "Above"
-    },
-    metroid3: {
-        chestSkin: "lights",
-        mapLogic: "casualLogic",
-        mPos: "Above",
-        mZoom: 100
-    },
-    metroid1: {
-        mapLogic: "casualLogic",
-        mPos: "Above"
+        mapLogic: (zeldaMode == "regions") ? "minorGlitches" : "glitchless"
     },
     averge1: {
-        mapLogic: "glitchless",
-        mPos: "Above",
-        mZoom: 100
+        mapLogic:   "glitchless",
+        mPos:       "Above",
+        mZoom:      100
     }
 };
-for(let gameName in gameNames) {
-    gameName = gameNames[gameName];
+for(let gameName of megaManifest["gameSets"][gameSet]["games"]) {
+    if(!(gameName in defaultOptions)) {
+        defaultOptions[gameName] = [];
+    }
+    defaultOptions[gameName] = extend(defaultOptions[gameName],manifests[gameName]["defaultSettings"]);
     cookieDefault[gameName].items = defaultItemGrid[gameName];
     for(let k in defaultOptions[gameName]) {
         if(cookieDefault[gameName][k] === undefined) {
@@ -235,6 +217,10 @@ function loadCookie() {
     cookielock = false;
 }
 
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 function setConfigObject(configobj) {
     //initGridRow(JSON.parse(JSON.stringify(configobj.items)));
     //while(itemLayout.length > 0) {itemLayout.length.pop();}
@@ -242,48 +228,86 @@ function setConfigObject(configobj) {
     //Array.prototype.push.apply(itemLayout, configobj.items);
     window.vm.itemRows = configobj[selectedGame].items;
 
-    document.getElementsByName('showmap')[0].checked = !!configobj[selectedGame].map;                            // Map Enabled?
-    document.getElementsByName('showmap')[0].onchange();
-    document.getElementsByName('itemdivsize')[0].value = configobj[selectedGame].iZoom;                         // Inventory Scale
-    document.getElementsByName('itemdivsize')[0].onchange();
-    document.getElementsByName('mapdivsize')[0].value = configobj[selectedGame].mZoom;                          // Map Scale (Z3 only)
-    document.getElementsByName('mapdivsize')[0].onchange();
-
-    document.getElementsByName('maporientation')[configobj[selectedGame].mOrien].click();                       // Map Orientation (Horizontal, Vertical) (Z3 only)
-
-    var mappositions = ["Above","Below","Side"];
-    document.getElementsByName('mapposition')[mappositions.indexOf(configobj[selectedGame].mPos)].click();      // Map Position (Above, Below, Side) (Z3 only)
-
-    if(selectedGame == "zelda3") {
-        var mapstates = ["standard","open"];
-        document.getElementsByName('mapstate')[mapstates.indexOf(configobj[selectedGame].mapState)].click();    // Map State (Standard, Open) (Z3 only)
+    for(let [eleName, cookieKey] of Object.entries({
+        "showmap":          "map",          // Map Enabled?
+        "itemdivsize":      "iZoom",        // Inventory Scale
+        "mapdivsize":       "mZoom",        // Map Scale
+        "maporientation":   "mOrien",       // Map Orientation (Horizontal, Vertical)
+        "mapposition":      "mPos",         // Map Position (Above, Below, Side)
+        "mapstate":         "mapState",     // Map State (Standard, Open)
+        "swordless":        "mapSwords",    // Swordless?
+        "ohko":             "mapOHKO",      // OHKO?
+        "maplogic":         "mapLogic",     // Map Logic
+        "nonvanilla":       "nonVanilla",   // Non-Vanilla Slots?
+        "chestskin":        "chestSkin",    // Chest Skin (Lights, No Lights, Nothing)
+        "showchest":        "showChests",   // Show Chests on Dungeon Squares?
+        "showcrystal":      "showPrizes",   // Show Prizes on Dungeon Squares?
+        "showmedallion":    "showMedals",   // Show Medallions on Dungeon Squares?
+        "showlabel":        "showLabels"    // Show Labels on Dungeon/BOss Squares?
+    })) {
+        if(!(cookieKey in configobj[selectedGame])) {
+            // console.log("NO:",selectedGame,cookieKey);
+            continue;
+        }
+        let eles = document.getElementsByName(eleName);
+        let eleNum = 0;
+        let isRadio = false;
+        if(eles) {
+            // console.log("Have Eles:",eleName);
+            let vals = {
+                maporientation: ["Horizontal","Vertical"],
+                mapposition:    ["Above","Below","Side"],
+                mapstate:       ["standard","open"],
+                maplogic:       ["glitchless","minorGlitches","owGlitches","majorGlitches","casualLogic","tourneyLogic"],
+                chestskin:      ["lights","nolights","nothing"]
+            };
+            if(Object.keys(vals).indexOf(eleName) > -1) {
+                cookieVal = configobj[selectedGame][cookieKey];
+                let test = -1;
+                if(isNumeric(cookieVal)) {
+                    test = cookieVal;
+                } else {
+                    if(vals[eleName].indexOf(cookieVal) > -1) {
+                        test = vals[eleName].indexOf(cookieVal);
+                    }
+                }
+                if(test > -1) {
+                    // console.log("Radio Selection");
+                    eleNum = test;
+                    isRadio = true;
+                } else {
+                    // console.log("Failed Radio Test:",cookieVal);
+                }
+            }
+            if(eles[eleNum]) {
+                let ele = eles[eleNum];
+                if(!isRadio) {
+                    // console.log("Toggling Check");
+                    ele.checked = !!configobj[selectedGame][cookieKey];
+                    ele.onchange();
+                } else {
+                    // console.log("Clicking Radio");
+                    ele.click();
+                }
+            }
+        }
     }
 
-    document.getElementsByName('swordless')[0].checked = !configobj[selectedGame].mapSwords;                    // Swordless? (Z3 only)
-    document.getElementsByName('swordless')[0].onchange();
-    document.getElementsByName('ohko')[0].checked = !!configobj[selectedGame].mapOHKO;                          // OHKO? (Z3 only)
-    document.getElementsByName('ohko')[0].onchange();
+    // var mappositions = ["Above","Below","Side"];
+    // document.getElementsByName('mapposition')[mappositions.indexOf(configobj[selectedGame].mPos)].click();      // Map Position (Above, Below, Side) (Z3 only)
 
-    var maplogics = ["glitchless","minorGlitches","owGlitches","majorGlitches","casualLogic","tourneyLogic"];
-    document.getElementsByName('maplogic')[maplogics.indexOf(configobj[selectedGame].mapLogic)].click();        // Map Logic
+    // if(selectedGame == "zelda3") {
+    //     var mapstates = ["standard","open"];
+    //     document.getElementsByName('mapstate')[mapstates.indexOf(configobj[selectedGame].mapState)].click();    // Map State (Standard, Open) (Z3 only)
+    // }
 
-    if(roomid == "lozmx") {
-        document.getElementsByName('nonvanilla')[0].checked = !!configobj[selectedGame].nonVanilla;             // Non-Vanilla slots? (LoZMx only)
-        document.getElementsByName('nonvanilla')[0].onchange();
-    }
-    if(selectedGame == "metroid3") {
-        var chestskins = ["lights","nolights","nothing"];
-        document.getElementsByName('chestskin')[chestskins.indexOf(configobj[selectedGame].chestSkin)].click(); // Chest Skin (Lights, No Lights, Nothing) (M3 only)
-    }
+    // var maplogics = ["glitchless","minorGlitches","owGlitches","majorGlitches","casualLogic","tourneyLogic"];
+    // document.getElementsByName('maplogic')[maplogics.indexOf(configobj[selectedGame].mapLogic)].click();        // Map Logic
 
-    document.getElementsByName('showchest')[0].checked = !!configobj[selectedGame].showChests;                  // Show Chests on Dungeon squares (Z3 only)
-    document.getElementsByName('showchest')[0].onchange();
-    document.getElementsByName('showcrystal')[0].checked = !!configobj[selectedGame].showPrizes;                // Show Prizes on Dungeon squares (Z3 only)
-    document.getElementsByName('showcrystal')[0].onchange();
-    document.getElementsByName('showmedallion')[0].checked = !!configobj[selectedGame].showMedals;              // Show Medallions on Dungeon squares (Z3 only)
-    document.getElementsByName('showmedallion')[0].onchange();
-    document.getElementsByName('showlabel')[0].checked = !!configobj[selectedGame].showLabels;                  // Show Labels on Dungeon/Boss squares
-    document.getElementsByName('showlabel')[0].onchange();
+    // if(selectedGame == "metroid3") {
+    //     var chestskins = ["lights","nolights","nothing"];
+    //     document.getElementsByName('chestskin')[chestskins.indexOf(configobj[selectedGame].chestSkin)].click(); // Chest Skin (Lights, No Lights, Nothing) (M3 only)
+    // }
 }
 
 function updateConfigFromFirebase(configobj) {
@@ -335,8 +359,7 @@ function getConfigObjectFromCookie(getAllKeys = true) {
     var globalKeys = ["ts","itemValues"];
 
     cookiekeys.forEach(function (key) {
-        for(var gameName in gameNames) {
-            gameName = gameNames[gameName];
+        for(let gameName of megaManifest["gameSets"][gameSet]["games"]) {
             if(configobj[gameName] && configobj[gameName][key] === undefined) {
                 if(globalKeys.indexOf(key) < 0) {
                     if(cookieDefault[gameName][key] !== undefined) {
@@ -368,29 +391,92 @@ function getConfigObject() {
 
     configobj[selectedGame] = {};
     configobj[selectedGame].gameName = selectedGame;
-
-    configobj[selectedGame].map = document.getElementsByName('showmap')[0].checked;                             // Map Enabled?
-    configobj[selectedGame].iZoom = document.getElementsByName('itemdivsize')[0].value;                         // Inventory Scale
-    configobj[selectedGame].mZoom = document.getElementsByName('mapdivsize')[0].value;                          // Map Scale (Z3 only)
-
-    configobj[selectedGame].mOrien = document.getElementsByName('maporientation')[1].checked ? 1 : 0;           // Map Orientation (Horizontal, Vertical) (Z3 only)
-    configobj[selectedGame].mPos = document.querySelector('input[name="mapposition"]:checked').value;           // Map Position (Above, Below, Side) (Z3 only)
-    configobj[selectedGame].mapLogic = document.querySelector('input[name="maplogic"]:checked').value;          // Map Logic
-    configobj[selectedGame].mapOHKO = document.getElementsByName('ohko')[0].checked;                            // OHKO? (Z3 only)
-    if(roomid == "lozmx") {
-        configobj[selectedGame].nonVanilla = !document.getElementsByName('nonvanilla')[0].checked;              // Non-vanilla slots? (LoZMx only)
+    let configSwitches = {
+        "showmap": {
+            "cookieKey": "map",
+            "type": "toggle"
+        },
+        "itemdivsize": {
+            "cookieKey": "iZoom",
+            "type": "value"
+        },
+        "mapdivsize": {
+            "cookieKey": "mZoom",
+            "type": "value"
+        },
+        "maporientation": {
+            "cookieKey": "mOrien",
+            "type": "option"
+        },
+        "mapposition": {
+            "cookieKey": "mPos",
+            "type": "option"
+        },
+        "mapstate": {
+            "cookieKey": "mapState",
+            "type": "option"
+        },
+        "swordless": {
+            "cookieKey": "mapSwords",
+            "type": "toggle"
+        },
+        "ohko": {
+            "cookieKey": "mapOHKO",
+            "type": "toggle"
+        },
+        "maplogic": {
+            "cookieKey": "mapLogic",
+            "type": "option"
+        },
+        "nonvanilla": {
+            "cookieKey": "nonVanilla",
+            "type": "toggle"
+        },
+        "chestskin": {
+            "cookieKey": "chestSkin",
+            "type": "option"
+        },
+        "showchest": {
+            "cookieKey": "showChests",
+            "type": "toggle"
+        },
+        "showcrystal": {
+            "cookieKey": "showPrizes",
+            "type": "toggle"
+        },
+        "showmedallion": {
+            "cookieKey": "showMedals",
+            "type": "toggle"
+        },
+        "showlabel": {
+            "cookieKey": "showLabels",
+            "type": "toggle"
+        }
+    };
+    for(let [eleName, sData] of Object.entries(configSwitches)) {
+        cookieKey = sData["cookieKey"];
+        if(["toggle","value"].indexOf(sData["type"]) > -1) {
+            let eles = document.getElementsByName(eleName);
+            if(eles) {
+                let ele = eles[0];
+                if(ele) {
+                    if(sData["type"] == "toggle") {
+                        configobj[selectedGame][cookieKey] = document.getElementsByName(eleName)[0].checked;
+                    } else if(sData["type"] == "value") {
+                        configobj[selectedGame][cookieKey] = document.getElementsByName(eleName)[0].value;
+                    }
+                }
+            }
+        } else if(sData["type"] == "option") {
+            let eles = document.querySelector("input[name=\"" + eleName + "\"]:checked");
+            if(eles) {
+                let ele = eles;
+                if(ele) {
+                    configobj[selectedGame][cookieKey] = document.querySelector("input[name=\"" + eleName + "\"]:checked").value;
+                }
+            }
+        }
     }
-    if(selectedGame == "zelda3") {
-        configobj[selectedGame].mapSwords = !document.getElementsByName('swordless')[0].checked;                // Swords? (Z3 only)
-    } else if(selectedGame == "metroid3") {
-        configobj[selectedGame].chestSkin = document.querySelector('input[name="chestskin"]:checked').value;    // Chest Skin (Lights, No Lights, Nothing) (M3 only)
-    }
-
-    configobj[selectedGame].mapState = document.querySelector('input[name="mapstate"]:checked').value;          // Map State (Standard, Open) (Z3 only)
-    configobj[selectedGame].showChests = document.getElementsByName('showchest')[0].checked;                    // Show Chests on Dungeon squares (Z3 only)
-    configobj[selectedGame].showPrizes = document.getElementsByName('showcrystal')[0].checked;                  // Show Prizes on Dungeon squares (Z3 only)
-    configobj[selectedGame].showMedals = document.getElementsByName('showmedallion')[0].checked;                // Show Medallions on Dungeon squares (Z3 only)
-    configobj[selectedGame].showLabels = document.getElementsByName('showlabel')[0].checked;                    // Show Labels on Dungeon/Boss squares
 
     configobj[selectedGame].items = window.vm.itemRows;
 
@@ -417,25 +503,24 @@ function toggleChest(x){
 var selectGame = '<span id="selectGame">[ ';
 
 var crumbs = {};
-if(gameSet == "smalttpr") {
-    crumbs = {
-        Hyrule: "?game=zelda3",
-        Zebes: "?game=metroid3",
-        LoZMx: "?game=zelda1"
-    };
-} else if(gameSet == "lozmx") {
-    crumbs = {
-        Hyrule: "?game=zelda1",
-        Zebes: "?game=metroid1",
-        SMALttPR: "?game=zelda3",
-    };
+for(let gameID of megaManifest["gameSets"][gameSet]["games"]) {
+    let crumb = manifests[gameID]["title"]["crumb"];
+    crumbs[crumb] = "?game=" + gameID;
+}
+for(let gameSetID of Object.keys(megaManifest["gameSets"])) {
+    if(gameSetID == "averge1") { continue; }
+    if(gameSetID != gameSet) {
+        let gameID = megaManifest["gameSets"][gameSetID]["games"][0];
+        let crumb = megaManifest["gameSets"][gameSetID]["crumb"];
+        crumbs[crumb] = "?game=" + gameID;
+    }
 }
 for(let crumb in crumbs) {
     let title = crumb;
     let url = crumbs[crumb];
 
     selectGame += '<a href="' + url + '">' + title + '</a>';
-    if(gameSet == "smalttpr" && title == "Hyrule") {
+    if((["smalttpr","quad"].indexOf(gameSet) > -1) && title == "Hyrule of Legend") {
         selectGame += '<a href="?game=zelda3&zeldaMode=regions">*</a>';
     }
 
@@ -498,14 +583,16 @@ function chestClass(x) {
         className += "opened ";
     }
     if(chest.isWarp) {
-        className += "portal ";
-        className += "portal-" + selectedGame + " ";
+        // className += "portal ";
+        // className += "portal-" + selectedGame + " ";
+        className += "warp ";
+        className += "warp-" + selectedGame + " ";
         if(!document.getElementById("mapWarps").checked) {
             className += "hidden ";
         }
     } else if(chest.isPortal) {
         className += "portal ";
-        className += "portal-" + altGames[selectedGame] + " ";
+        className += "portal-" + manifests[selectedGame]["altGame"][0] + " ";
         if(!document.getElementById("mapPortals").checked) {
             className += "hidden ";
         }
@@ -538,7 +625,7 @@ function togglePortal(x) {
     var chest = chests[selectedGame][x];
     let makePortal = !chest.isPortal;
     let className = "portal-";
-    className += altGames[selectedGame];
+    className += manifests[selectedGame]["altGame"][0];
 
     chest.isPortal = makePortal;
 
@@ -785,7 +872,7 @@ function showLabel(sender) {
 }
 
 function showRegions(sender) {
-    if(gameSet != "smalttpr") { return; }
+    if(gameSet != "smalttpr" && gameSet != "quad") { return; }
 
     trackerData[selectedGame].showRegions = sender.checked;
     if(sender.checked) {
@@ -802,7 +889,7 @@ function showWarps(sender) {
     if(selectedGame != "zelda3") { return; }
 
     trackerData[selectedGame].showWarps = sender.checked;
-    let eles = document.querySelectorAll(".portal-" + selectedGame);
+    let eles = document.querySelectorAll(".warp-" + selectedGame);
     if(sender.checked) {
         eles.forEach(function(userItem) {
             userItem.classList.remove("hidden");
@@ -827,7 +914,8 @@ function showPortals(sender) {
             userItem.classList.add("hidden");
         });
     }
-    let items = document.querySelectorAll(".item-" + altGames[selectedGame]);
+    let altGame = manifests[selectedGame]["altGame"][0];
+    let items = document.querySelectorAll(".item-" + altGame);
     if(sender.checked) {
         items.forEach(function(userItem) {
             userItem.classList.remove("hidden");
@@ -1095,9 +1183,11 @@ function refreshChests() {
         }
         let chest = chests[selectedGame][k];
         let chestDOM = document.getElementById(k);
-        chestDOM.className = chestClass(k);
+        if(chestDOM) {
+            chestDOM.className = chestClass(k);
+        }
 
-        if(gameSet == "smalttpr") {
+        if(gameSet == "smalttpr" || gameSet == "quad") {
             // Determine Lonk's Hoose
             if(chest.name == "Link's House") {
                 if(has("state.inverted")) {            // Inverted, move to Dark World
@@ -1133,6 +1223,7 @@ function refreshMap() {
   refreshChests();
 
   for(k=0; k<dungeons[selectedGame].length; k++){
+      if(!document.getElementById("bossMap"+k)) { console.log(`Dungeon '${k}' not found!`); continue; }
       if(trackerData[selectedGame].dungeonbeaten[k]) {
           document.getElementById("bossMap"+k).className = "mapspan boss opened";
       } else {
@@ -1267,7 +1358,8 @@ function populateMapdiv(useGame = "zelda3") {
     // Dungeon bosses & chests
     for(k=0; k<dungeons[useGame].length; k++){
         var s = document.createElement('span');
-        s.style.backgroundImage = 'url(' + build_img_url("boss" + k + itemsMax[gameAbbr + "boss" + k]) + ')';
+        let bossKey = manifests[useGame]["prefix"] + "boss" + k;
+        s.style.backgroundImage = 'url(' + build_img_url(bossKey + itemsMax[bossKey]) + ')';
         s.id = 'bossMap' + k;
         s.title = dungeons[useGame][k].titleStripped;
         s.onmouseover = new Function('highlightDungeon('+k+')');
@@ -1309,7 +1401,7 @@ function populateItemconfig() {
 
     for (var key in trackerData[selectedGame].items) {
         let thisGame = selectedGame;
-        let altGame = altGames[selectedGame];
+        let altGame = manifests[selectedGame]["altGame"][0];
         let useGame = thisGame;
 
         if(
@@ -1391,24 +1483,35 @@ function useTourneyConfig() {
 
 function initTracker() {
     var useGame = arguments[0];
-    document.body.classList.add(gameSet);
-    document.body.classList.add(selectedGame);
-    populateMapdiv(useGame);
-    populateItemconfig();
+    if(document && document.body) {
+        document.body.classList.add(gameSet);
+        if(gameSet == "quad") {
+            for(let gameID of ["smalttpr","lozmx"]) {
+                document.body.classList.add(gameID);
+            }
+        }
+        document.body.classList.add(selectedGame);
+        populateMapdiv(useGame);
+        populateItemconfig();
 
-    loadCookie();
-    updateAll();
+        loadCookie();
+        updateAll();
 
-    var games = {
-        zelda1:     "TLoZ",
-        zelda3:     "ALttP",
-        metroid1:   "Metroid",
-        metroid3:   "Super Metroid",
-        averge1:    "Axiom Verge",
-    };
-    var game = games[selectedGame];
-    document.title = game + " Item Tracker";
-    document.getElementById("caption").innerHTML = selectGame + ' ]';
+        var games = {
+            zelda1:     "TLoZ",
+            zelda3:     "ALttP",
+            metroid1:   "Metroid",
+            metroid3:   "Super Metroid",
+            averge1:    "Axiom Verge",
+        };
+        var game = games[selectedGame];
+        if(document.title) {
+            document.title = game + " Item Tracker";
+        }
+        if(document.getElementById("caption")) {
+            document.getElementById("caption").innerHTML = selectGame + ' ]';
+        }
+    }
 
     if(selectedGame == "zelda3") {
         let logics = ["glitchless","minorGlitches","owGlitches","majorGlitches"];
@@ -1423,7 +1526,7 @@ function initTracker() {
         }
         saveCookie();
     }
-    if(effectiveVersion != "") {
+    if(effectiveVersion != "" && document.getElementById("version")) {
         document.getElementById("version").innerHTML = effectiveVersion;
     }
 
@@ -1613,15 +1716,18 @@ Vue.component('tracker-cell', {
     itemClass: function() {
       let universe = selectedGame.substr(0,selectedGame.length - 1);
       let itemGame = selectedGame;
+      let className = "";
 
       if(
         (gameItems[universe + "1"] && gameItems[universe + "1"].indexOf(this.itemName) == -1) &&
         (gameItems[universe + "3"] && gameItems[universe + "3"].indexOf(this.itemName) == -1)
       ) {
-        itemGame = altGames[selectedGame];
+        itemGame = manifests[selectedGame]["altGame"][0];
       }
+      className += this.dungeonLabel ? " dungeonCell" : "";
+      className += " item-" + itemGame;
 
-      return "item-" + itemGame;
+      return className.trim();
     },
     ohkoClass: function() {
       if(selectedGame != "zelda3") { return null; }

@@ -10,7 +10,7 @@ manifests[g] = {
     title: {
         full:   "The Legend of Zelda: A Link to the Past",
         short:  "Z3",
-        crumb:  "Hyrule"
+        crumb:  "Hyrule of Legend"
     },
     prefix: "z3",
     altGame: [ "metroid3" ],
@@ -257,11 +257,19 @@ manifests[g] = {
         }
     },
     regions: {
-        dungeons:   ["main"],
-        overworld:  ["main"],
-        zebes:      ["z3-m3"],
+        // z3dungeons: ["main"],
+        // overworld:  ["main"],
+        // z3zebes:    ["z3-m3"],
     },
     defaultSettings: {
+        mapState:   "open",
+        mapOHKO:    false,
+        mapSwords:  true,
+        mPos:       "Side",
+        mZoom:      80,
+        showChests: true,
+        showPrizes: true,
+        showMedals: true,
     },
     dungeonchestsInit:  {
          0:  3, // Eastern Palace

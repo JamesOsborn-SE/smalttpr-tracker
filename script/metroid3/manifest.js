@@ -7,7 +7,7 @@ manifests[g] = {
     title: {
         full:   "Super Metroid",
         short:  "M3",
-        crumb:  "Zebes"
+        crumb:  "Planet Zebes"
     },
     prefix: "m3",
     altGame: [ "zelda3" ],
@@ -104,14 +104,14 @@ manifests[g] = {
             "east",
             "west"
         ],
-        brinstar: [
+        m3brinstar: [
             "blue",
             "green",
             "pink",
             "red",
             "kraid"
         ],
-        norfair: [
+        m3norfair: [
             "crocomire",
             "east",
             "west"
@@ -125,8 +125,8 @@ manifests[g] = {
             "west",
             "east"
         ],
-        tourian:        ["main"],
-        hyruleportals:  ["main"],
+        m3tourian:          ["main"],
+        m3hyruleportals:    ["main"],
     },
     defaultSettings: {
         chestSkin:  "lights",

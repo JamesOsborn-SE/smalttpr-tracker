@@ -6,7 +6,7 @@ manifests[g] = {
     title: {
         full:   "The Legend of Zelda",
         short:  "Z1",
-        crumb:  "Hyrule"
+        crumb:  "Ancient Hyrule"
     },
     prefix: "z1",
     altGame: [ "metroid1" ],
@@ -62,27 +62,27 @@ manifests[g] = {
         ]
     ],
     items: {
+        z1bracelet:         { name: "Bracelet" },
+        z1book:             { name: "Book" },
         z1bow:              { name: "Bow" },
-        z1woods:            { name: "Wood Arrows" },
-        z1silvers:          { name: "Silver Arrows" },
-        z1recorder:         { name: "Recorder" },
         z1food:             { name: "Food" },
+        z1ladder:           { name: "Ladder" },
+        z1letter:           { name: "Letter" },
+        z1magicalkey:       { name: "Magical Key" },
         z1magicalrod:       { name: "Magical Rod" },
         z1raft:             { name: "Raft" },
-        z1book:             { name: "Book" },
-        z1ladder:           { name: "Ladder" },
-        z1magicalkey:       { name: "Magical Key" },
-        z1letter:           { name: "Letter" },
+        z1recorder:         { name: "Recorder" },
+        z1silvers:          { name: "Silver Arrows" },
+        z1woods:            { name: "Wood Arrows" },
 
-        z1boomerang:        { name: "Boomerang",        min: 0, max:  2},
+        z1boomerang:        { name: "Boomerang",        min: 0, max:  2 },
         z1bomb:             { name: "Bombs",            min: 0, max: 16 },
-        z1candle:           { name: "Candle",           min: 0, max:  2 },
         z1bottle:           { name: "Bottle",           min: 0, max:  2 },
-        z1sword:            { name: "Sword",            min: 0, max:  3 },
-        z1shield:           { name: "Shield",           min: 0, max:  2 },
+        z1candle:           { name: "Candle",           min: 0, max:  2 },
         z1heartcontainer:   { name: "Heart Container",  min: 0, max: 14 },
         z1ring:             { name: "Ring",             min: 0, max:  2 },
-        z1bracelet:         { name: "Bracelet",         min: 0, max:  2 },
+        z1shield:           { name: "Shield",           min: 0, max:  2 },
+        z1sword:            { name: "Sword",            min: 0, max:  3 },
 
         z1boss0: {
             name: "Eagle",
@@ -161,7 +161,7 @@ manifests[g] = {
             "shop",
             "takeany"
         ],
-        dungeons: [
+        z1dungeons: [
             "level0",
             "level1",
             "level2",

@@ -1,5 +1,6 @@
 function fix_region(str) {
     var replace = [
+                    "dungeons",
                     "world",
                     "east",
                     "west",
@@ -17,10 +18,16 @@ function fix_region(str) {
                     "town",
                     "hera",
                     "rock",
+
+                    "brinstar",
+                    "hyrule",
+                    "tourian",
                     "norfair",
+                    "zebes",
                     "ship",
                     "portals",
                     "warps",
+
                     "caves",
                     "making",
                     "game",
@@ -40,13 +47,22 @@ function fix_region(str) {
     return str.ucfirst();
 }
 
-var scripts = [
-    "script/manifest.js",
-    "script/" + selectedGame + "/manifest.js",
-    "script/items.js",
-    "script/shared-access.js",
-    "script/" + selectedGame + "/items.js",
-];
+var scripts = [];
+
+var selectedGameSet = "";
+for(let [setID, gameSet] of Object.entries(megaManifest["gameSets"])) {
+    if(gameSet["games"].indexOf(selectedGame) > -1) {
+        selectedGameSet = setID;
+        for(let gameID of gameSet["games"]) {
+            scripts.push("script/" + gameID + "/manifest.js");
+        }
+    }
+}
+gameSet = selectedGameSet;
+
+scripts.push("script/items.js");
+scripts.push("script/shared-access.js");
+scripts.push("script/" + selectedGame + "/items.js");
 
 var sheets = [
 ];
@@ -90,47 +106,46 @@ scripts.push("script/classes/Location.js");
 scripts.push("script/classes/LocationCollection.js");
 scripts.push("script/classes/Region.js");
 
-if(gameSet == "lozmx") {
+if(gameSet == "lozmx" || gameSet == "quad") {
     scripts.push("script/classes/Region/TLoZ.js");
     scripts.push("script/classes/Region/Metroid.js");
-    scripts.push("script/zelda3/item-limits.js");
-    scripts.push("script/metroid3/item-limits.js");
-    scripts.push("script/zelda1/item-limits.js");
-    scripts.push("script/metroid1/item-limits.js");
-} else if(gameSet == "smalttpr") {
+}
+if(gameSet == "smalttpr" || gameSet == "quad") {
     scripts.push("script/classes/Region/ALttP.js");
     scripts.push("script/classes/Region/SuperMetroid.js");
-    scripts.push("script/zelda3/item-limits.js");
-    scripts.push("script/metroid3/item-limits.js");
-} else if(gameSet == "averge1") {
+}
+if(gameSet == "averge1") {
     scripts.push("script/classes/Region/AxiomVerge.js");
-    scripts.push("script/averge1/item-limits.js");
 }
 
 let universe = selectedGame.substr(0,selectedGame.length - 1);
 sheets.push("css/" + universe + '/' + universe.substr(0,1) + selectedGame.substr(-1) + '/' + universe + selectedGame.substr(-1) + ".css");
 
-for(let u of ["zelda","metroid"]) {
-    if(universe != u) {
-        sheets.push(`css/${u}/not${u}.css`);
+if(gameSet != "quad") {
+    for(let u of ["zelda","metroid"]) {
+        if(universe != u) {
+            sheets.push(`css/${u}/not${u}.css`);
+        }
     }
 }
 for(let g of ["lozmx","smalttpr"]) {
-    if(gameSet != g) {
+    if(gameSet != g && gameSet != "quad") {
         sheets.push(`css/gamesets/not${g}.css`)
     }
 }
-for(let g of ["zelda1","metroid1","zelda3","metroid3"]) {
-    if(selectedGame != g) {
-        let u = g.substr(0,g.length - 1);
-        sheets.push(`css/${u}/not${g}.css`)
+if(gameSet != "quad") {
+    for(let g of ["zelda1","metroid1","zelda3","metroid3"]) {
+        if(selectedGame != g) {
+            let u = g.substr(0,g.length - 1);
+            sheets.push(`css/${u}/not${g}.css`)
+        }
     }
 }
 
-if(universe == "zelda") {
+if(universe == "zelda" || gameSet == "quad") {
     sheets.push("css/zelda/zelda.css");
 }
-if(universe == "metroid") {
+if(universe == "metroid" || gameSet == "quad") {
     sheets.push("css/metroid/metroid.css");
 }
 
@@ -152,7 +167,7 @@ var regionNames = {
             "shop",
             "takeany"
         ],
-        dungeons: [
+        z1dungeons: [
             "level0",
             "level1",
             "level2",
@@ -166,27 +181,27 @@ var regionNames = {
         ],
     },
     zelda3: {
-        dungeons:   ["main"],
+        z3dungeons: ["main"],
         overworld:  ["main"],
-        zebes:      ["z3-m3"],
+        z3zebes:    ["z3-m3"],
     },
     metroid1: {
-        brinstar:       ["main"],
-        kraid:          ["main"],
-        norfair:        ["main"],
-        ridley:         ["main"],
-        tourian:        ["main"],
-        hyruleportals:  ["main"],
+        m1brinstar:         ["main"],
+        kraid:              ["main"],
+        m1norfair:          ["main"],
+        ridley:             ["main"],
+        m1tourian:          ["main"],
+        m1hyruleportals:    ["main"],
     },
     metroid3: {
-        crateria:       ["central","east","west"],
-        brinstar:       ["blue","green","pink","red","kraid"],
-        norfair:        ["crocomire","east","west"],
-        wreckedship:    ["main"],
-        maridia:        ["inner","outer"],
-        lowernorfair:   ["west","east"],
-        tourian:        ["main"],
-        hyruleportals:  ["main"],
+        crateria:           ["central","east","west"],
+        m3brinstar:         ["blue","green","pink","red","kraid"],
+        m3norfair:          ["crocomire","east","west"],
+        wreckedship:        ["main"],
+        maridia:            ["inner","outer"],
+        lowernorfair:       ["west","east"],
+        m3tourian:          ["main"],
+        m3hyruleportals:    ["main"],
     },
     averge1: {
         "absu":     ["main"],
@@ -204,7 +219,7 @@ var regionNames = {
 if(zeldaMode == "regions") {
     regionNames.zelda3 = {
         hyrulewarps: ["main"],
-        dungeons: [
+        z3dungeons: [
             "easternpalace",
             "desertpalace",
             "towerofhera",
@@ -239,7 +254,7 @@ if(zeldaMode == "regions") {
             "northwest",
             "south"
         ],
-        zebesportals: ["main"],
+        z3zebesportals: ["main"],
     }
 }
 
@@ -256,6 +271,7 @@ for(var gameName in regionNames) {
                     gameName == "metroid3" ||
                     (gameName == "zelda3" && zeldaMode == "regions") ||
                     gameSet == "lozmx" ||
+                    gameSet == "quad" ||
                     gameSet == "averge1"
                 ) {
                     url += "script/classes/Region/";
@@ -284,7 +300,7 @@ for(var gameName in regionNames) {
 scripts.push("script/vue/vue-2.5.16-min.js");
 scripts.push("script/main.js");
 
-console.log({sheets:sheets,scripts:scripts});
+// console.log({sheets:sheets,scripts:scripts});
 
 LazyLoad.css(sheets, function () {
 });

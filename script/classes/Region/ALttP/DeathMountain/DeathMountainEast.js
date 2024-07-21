@@ -24,7 +24,7 @@ class DeathMountainEast extends DeathMountain {
     if(this.buildLocations) {
         this.locations["Mimic Cave"].glitchless = function() {
             if(! has("state.inverted")) {
-                let tr = new DungeonsTurtleRock("","",false);
+                let tr = new Z3DungeonsTurtleRock("","",false);
                 tr.initNoMajorGlitches();
 
                 return has("hammer") && has("mirror") && has("keyd7",2)

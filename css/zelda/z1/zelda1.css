@@ -28,6 +28,11 @@
     margin-top: 0;
 }
 
+.zelda1 .dungeonCell .corner {
+    transform: rotate(-60deg);
+    top: 25px;
+}
+
 .zelda1 .prizeImage {
     border-bottom-left-radius: 0;
 }

@@ -32,57 +32,12 @@ var bosses = 0;
 
 var selectedGame = getParameterByName("game",window.location,"zelda3");
 var effectiveVersion = "";
-var prefixes = {
-    "zelda3":   "z3",
-    "metroid3": "m3",
-    "zelda1":   "z1",
-    "metroid1": "m1",
-    "averge1":  "a1"
-};
-var gameSets = {
-    "smalttpr": ["zelda3","metroid3"],
-    "lozmx":    ["zelda1","metroid1"],
-    "averge1":  ["averge1"]
-};
 
-var altGames = {};
-var allGameNames = {};
-for([setID,group] of Object.entries(gameSets)) {
-    for(gameIDa of group) {
-        allGameNames[gameIDa] = group;
-        for(gameIDb of group) {
-            if(gameIDa != gameIDb) {
-                altGames[gameIDa] = gameIDb;
-            }
-        }
-    }
-}
-var gameNames = allGameNames[selectedGame];
-
-var chests = {};
-var dungeons = {};
-var cookieDefault = {};
 var regionObjects = {};
 var regionNames = {};
 var zeldaMode = getParameterByName("zeldaMode",window.location,"oldstyle");
 var metroidMode = getParameterByName("metroidMode",window.location,"");
-for(var gameName in gameNames) {
-    gameName = gameNames[gameName];
-    chests[gameName] = [];
-    dungeons[gameName] = [];
-    cookieDefault[gameName] = {};
-}
 
-var roomid = getParameterByName("roomid",window.location,null);
-var gameSet = "";
-for([setID,group] of Object.entries(gameSets)) {
-    if(group.indexOf(selectedGame) > -1) {
-        gameSet = setID;
-    }
-}
-if(roomid === null) {
-    roomdid = gameSet;
-}
 var questid = getParameterByName("questid",window.location,1);
 var authAttempted = false;
 
@@ -105,28 +60,8 @@ function tokenize(input) {
 
 function fix_itemlabel(item) {
     var ret = item;
-    var names = {
-        "firerod":      "Fire Rod",
-        "icerod":       "Ice Rod",
-        "moonpearl":    "Moon Pearl",
-        "mpupgrade":    "Magic Upgrade",
-        "etank":        "Energy Tank",
-        "hijump":       "Hi-Jump Boots",
-        "morph":        "Morph Ball",
-        "powerbomb":    "Power Bomb",
-        "rtank":        "Reserve Tank",
-        "screw":        "Screw Attack",
-        "space":        "Space Jump",
-        "speed":        "Speed Booster",
-        "springball":   "Spring Ball",
-        "supermissile": "Super Missile",
-        "xray":         "X-Ray Scope",
-        "kraidtotem":   "Kraid Totem",
-        "ridleytotem":  "Ridley Totem",
-        "triforcepiece":"Triforce Piece",
-    };
-    if(names[ret]) {
-        ret = names[ret];
+    if(itemNames[ret]) {
+        ret = itemNames[ret];
     }
 
     if((ret.indexOf("boss") === 2) || (ret.indexOf("chest") === 2)) {
@@ -134,29 +69,6 @@ function fix_itemlabel(item) {
         if(dungeons[selectedGame][ret.slice(start)]) {
             ret = dungeons[selectedGame][ret.slice(start)].titleStripped;
         }
-    }
-    var beams = [
-        "charge",
-        "ice",
-        "wave",
-        "plasma",
-        "grappling",
-        "long"
-    ];
-    if(beams.indexOf(ret) > -1) {
-        ret += " Beam";
-    }
-    if([
-        "varia",
-        "gravity"
-    ].indexOf(ret) > -1) {
-        ret += " Suit";
-    }
-    if(ret.indexOf("heart") === 2) {
-        ret = ret.replace("heart","Heart ");
-        ret = ret.split(" ");
-        ret[1] = ret[1].ucfirst();
-        ret = ret.join(" ");
     }
     if(ret.indexOf("triforcepiece") === 2) {
         ret = "Triforce Piece " + ret.substr(-1);
@@ -172,11 +84,11 @@ function build_img_url(item,useGame = selectedGame) {
         "poi"
     ];
 
-    var zelda3items = gameItems.zelda3;
-    var zelda1items = gameItems.zelda1;
-    var metroid3items = gameItems.metroid3;
-    var metroid1items = gameItems.metroid1;
-    var averge1items = gameItems.averge1;
+    var zelda3items     = "zelda3"      in gameItems ? gameItems.zelda3 : [];
+    var zelda1items     = "zelda1"      in gameItems ? gameItems.zelda1 : [];
+    var metroid3items   = "metroid3"    in gameItems ? gameItems.metroid3 : [];
+    var metroid1items   = "metroid1"    in gameItems ? gameItems.metroid1 : [];
+    var averge1items    = "averge1"     in gameItems ? gameItems.averge1 : [];
     let filext = "png";
 
     let itemKey = item;
@@ -262,11 +174,11 @@ function mini(item) {
     if(item.substring(1,2) == "1" || item.substring(1,2) == "3") {
         item = item.substring(2);
     }
-    var title    = item.ucfirst();
+    var title = item.ucfirst();
 
     var globalReplaceTitle = {
-        pendant1:    "Pendant of Power",
-        pendant2:    "Pendant of Wisdom",
+        pendant1: "Pendant of Power",
+        pendant2: "Pendant of Wisdom",
     };
     globalReplaceTitle["dungeon" + GREENPENDANT]    = "Pendant of Courage";
     globalReplaceTitle["dungeon" + CRYSTAL]         = "Blue Crystal";

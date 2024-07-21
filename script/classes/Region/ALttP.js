@@ -12,12 +12,12 @@ class DarkWorldDeathMountain extends DarkWorld {
 }
 class HyruleWarps extends ALttP {
 }
-class ZebesPortals extends ALttP {
+class Z3ZebesPortals extends ALttP {
 }
-class Dungeons extends ALttP {
+class Z3Dungeons extends ALttP {
     constructor(name,subname) {
         super(name,subname);
-        Dungeons.prototype.boss = new Boss();
+        Z3Dungeons.prototype.boss = new Boss();
         this.canGetChest = {
             glitchless: function() { return true; },
             minorGlitches: function() { return this.glitchless(); },

@@ -1,10 +1,10 @@
 function Availability(glitchless = 'unavailable', minorGlitches = 'unavailable', owGlitches = 'unavailable', majorGlitches = 'unavailable') {
     this._glitchless    = glitchless;
-    this._casualLogic    = glitchless;
-    this._minorGlitches    = minorGlitches;
+    this._casualLogic   = glitchless;
+    this._minorGlitches = minorGlitches;
     this._owGlitches    = owGlitches;
-    this._tourneyLogic    = owGlitches;
-    this._majorGlitches    = majorGlitches;
+    this._tourneyLogic  = owGlitches;
+    this._majorGlitches = majorGlitches;
 
     this.getClassName = function () {
         return this[trackerData[selectedGame].mapLogic];
@@ -16,8 +16,8 @@ Object.defineProperty(Availability.prototype, 'casualLogic', {
         return this._casualLogic;
     },
     set: function (value) {
-        this._casualLogic = value;
-        this._tourneyLogic = value;
+        this._casualLogic   = value;
+        this._tourneyLogic  = value;
     }
 });
 
@@ -26,9 +26,9 @@ Object.defineProperty(Availability.prototype, 'glitchless', {
         return this._glitchless;
     },
     set: function (value) {
-        this._glitchless = value;
+        this._glitchless    = value;
         this._minorGlitches = value;
-        this._owGlitches = value;
+        this._owGlitches    = value;
         this._majorGlitches = value;
     }
 });
@@ -39,7 +39,7 @@ Object.defineProperty(Availability.prototype, 'minorGlitches', {
     },
     set: function (value) {
         this._minorGlitches = value;
-        this._owGlitches = value;
+        this._owGlitches    = value;
         this._majorGlitches = value;
     }
 });
@@ -49,7 +49,7 @@ Object.defineProperty(Availability.prototype, 'owGlitches', {
         return this._owGlitches;
     },
     set: function (value) {
-        this._owGlitches = value;
+        this._owGlitches    = value;
         this._majorGlitches = value;
     }
 });
@@ -74,15 +74,11 @@ Object.defineProperty(Availability.prototype, 'majorGlitches', {
 
 function getHas(item) {
     var val = 0;
-    if(prefixes[selectedGame]) {
-        item = prefixes[selectedGame] + item;
-    }
-    if(trackerData[selectedGame] && trackerData[selectedGame].items && trackerData[selectedGame].items[item]) {
-        val = trackerData[selectedGame].items[item];
-    } else if(trackerData.zelda3 && trackerData.zelda3.items && trackerData.zelda3.items[item]) {
-        val = trackerData.zelda3.items[item];
-    } else if(trackerData.metroid3 && trackerData.metroid3.items && trackerData.metroid3.items[item]) {
-        val = trackerData.metroid3.items[item];
+    let items = trackerData[selectedGame]["items"];
+    if(items) {
+        if(item in items) {
+            val = items[item];
+        }
     }
     return val;
 }
@@ -99,26 +95,14 @@ function has(item, amount = -1) {
         item = globalReplace[item];
     }
 
+    if(manifests[selectedGame]["prefix"]) {
+        item = manifests[selectedGame]["prefix"] + item;
+    }
+
     if(item.indexOf('.') == -1) {
-        if(prefixes[selectedGame]) {
-            item = prefixes[selectedGame] + item;
-        }
-        if(trackerData[selectedGame] && trackerData[selectedGame].items && trackerData[selectedGame].items[item]) {
-            ret = true;
-            val = trackerData[selectedGame].items[item];
-        } else if(trackerData.zelda3 && trackerData.zelda3.items && trackerData.zelda3.items[item]) {
-            ret = true;
-            val = trackerData.zelda3.items[item];
-        } else if(trackerData.zelda1 && trackerData.zelda1.items && trackerData.zelda1.items[item]) {
-            ret = true;
-            val = trackerData.zelda1.items[item];
-        } else if(trackerData.metroid3 && trackerData.metroid3.items && trackerData.metroid3.items[item]) {
-            ret = true;
-            val = trackerData.metroid3.items[item];
-        } else if(trackerData.metroid1 && trackerData.metroid1.items && trackerData.metroid1.items[item]) {
-            ret = true;
-            val = trackerData.metroid1.items[item];
-        }
+        val = getHas(item);
+        ret = val > 0;
+
         if(ret) {
             if(amount > -1 && val < amount) {
                 ret = false;
@@ -126,7 +110,7 @@ function has(item, amount = -1) {
         }
     }
 
-    if(gameSet == "smalttpr" && item.indexOf("state") > -1) {
+    if((gameSet == "smalttpr" || gameSet == "quad") && item.indexOf("state") > -1) {
         let open = trackerData.zelda3.mapState == "open";
         let inverted = trackerData.zelda3.mapState == "inverted";
         if(item.indexOf("open") > -1) {

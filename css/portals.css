@@ -1,17 +1,27 @@
-/* Portals to Zebes */
+/* Warps Light World to Dark World */
+/* Active */
+.zelda3 .warp-zelda3.active {
+    background-image: url(../images/metroid3/chests/icons-noicons/warp-zelda.png) !important;
+}
+/* Inactive */
+.zelda3 .warp-zelda3.inactive {
+    background-image: url(../images/metroid3/chests/icons-noicons/warp-zelda-inactive.png) !important;
+}
+
+/* Portals Hyrule to Zebes */
 /*  Active */
 .chest.portal-metroid3.active {
-    background-image: url(../images/zelda3/chests/warp.gif) !important;
+    background-image: url(../images/zelda3/chests/portal-metroid.gif) !important;
 }
 .chest.portal-metroid1.active {
     background-image: url(../images/metroid1/inventory/screw.png) !important;
 }
 /*  Inactive */
 .chest.portal-metroid3.inactive {
-    background-image: url(../images/zelda3/chests/inactivewarp.gif) !important;
+    background-image: url(../images/zelda3/chests/portal-metroid-inactive.gif) !important;
 }
 
-/* Portals to Hyrule */
+/* Portals to Zebes to Hyrule */
 /*  Active */
 .chest.portal-zelda1.active {
     background-color: #000000;
@@ -19,21 +29,19 @@
 }
 .chest.portal-zelda3.active {
     background-color: #aaffaa;
-    background-image: url(../images/metroid3/chests/warp.gif) !important;
+    background-image: url(../images/metroid3/chests/portal-zelda.gif) !important;
 }
-.zelda3 .chest.portal-zelda3.active,
 .icons-nothing .chest.portal-zelda3.active {
-    background-image: url(../images/metroid3/chests/icons-noicons/warp.png) !important;
+    background-image: url(../images/metroid3/chests/icons-noicons/warp-zelda.png) !important;
 }
 .icons-nothing .chest.portal-zelda1.active {
-    background-image: url(../images/metroid3/chests/icons-noicons/warp.png) !important;
+    background-image: url(../images/metroid3/chests/icons-noicons/warp-zelda.png) !important;
 }
 /*  Inactive */
 .chest.portal-zelda3.inactive {
     background-color: #ffaaff;
-    background-image: url(../images/metroid3/chests/inactivewarp.gif) !important;
+    background-image: url(../images/metroid3/chests/portal-zelda-inactive.gif) !important;
 }
-.zelda3 .chest.portal-zelda3.inactive,
 .icons-nothing .chest.portal-zelda3.inactive {
-    background-image: url(../images/metroid3/chests/icons-noicons/nowarp.png) !important;
+    background-image: url(../images/metroid3/chests/icons-noicons/warp-zelda-inactive.png) !important;
 }

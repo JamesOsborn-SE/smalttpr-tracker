@@ -79,7 +79,7 @@ class LightWorldSouth extends LightWorld {
             return (! isBunny(region.name));
         }
         this.locations["Desert Ledge"].glitchless = function() {
-            let dp = new DungeonsDesertPalace();
+            let dp = new Z3DungeonsDesertPalace();
             dp.initNoMajorGlitches();
 
             return dp.canEnter.glitchless();

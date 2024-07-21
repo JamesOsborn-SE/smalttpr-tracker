@@ -89,7 +89,7 @@ function initClasses(useGame) {
                                 return ret;
                             });
                             if(useGame == "zelda1") {
-                                label = location.name.substring(4).split('');
+                                label = location.name.substring(location.name.indexOf("The ") + ("The ").length).split('');
                             }
 
                             var dungeon = {

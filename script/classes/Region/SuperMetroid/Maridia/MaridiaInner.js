@@ -59,7 +59,7 @@ class MaridiaInner extends Maridia {
     }
 
     this.canEnter.casualLogic = function() {
-        let nw = new NorfairWest("","",false);
+        let nw = new M3NorfairWest("","",false);
         nw.initCasual();
 
         return ((nw.canEnter.casualLogic()
@@ -114,7 +114,7 @@ class MaridiaInner extends Maridia {
     }
 
     this.canEnter.tourneyLogic = function() {
-        let nw = new NorfairWest("","",false);
+        let nw = new M3NorfairWest("","",false);
         nw.initTournament();
 
         return nw.canEnter.tourneyLogic()
